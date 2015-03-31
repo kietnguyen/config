@@ -1,11 +1,5 @@
 #!/usr/bin/bash
 
-# Make sure only root can run this script
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
-fi
-
 # setup folders
 mkdir -p ~/.vim/{bundle,colors}
 cd ~/.vim
@@ -34,6 +28,3 @@ cp .vimrc ~/. && vim +PluginInstall +qall
 # compile YouCompleteMe
 sudo apt-get install -y build-essential cmake python-dev
 cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer
-
-# copy .tmux.conf
-cp .tmux.conf ~/.
