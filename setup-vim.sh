@@ -2,7 +2,6 @@
 
 # install git and init
 #sudo apt-get install -y git
-#git init
 
 # install pip
 wget -O - --no-check-certificate https://bootstrap.pypa.io/get-pip.py | python - --user
@@ -20,14 +19,14 @@ cp .vimrc ~/.
 
 # setup folders
 mkdir -p ~/.vim/{bundle,colors}
-cd ~/.vim
+cd ~/.vim && git init
 
 # clone Vundle
 git submodule add https://github.com/gmarik/Vundle.vim bundle/Vundle.vim
 
+# install Vundle plugins
+vim +PluginInstall +qall
+
 # compile YouCompleteMe
 sudo apt-get install -y build-essential cmake python-dev
 cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer
-
-# install Vundle plugins
-vim +PluginInstall +qall

@@ -8,7 +8,7 @@ fi
 
 
 # setup vim
-sudo ./setup-vim.sh
+./setup-vim.sh
 
 
 # setup tmux
