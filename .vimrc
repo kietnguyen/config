@@ -1,3 +1,29 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" plugins
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'scrooloose/syntastic'
+Plugin 'bling/vim-airline'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'nathanaelkane/vim-indent-guides'
+
+" color schemes
+Plugin 'flazz/vim-colorschemes'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
 " Automatically reload .vimrc file
 autocmd! bufwritepost .vimrc source %
 
@@ -35,6 +61,9 @@ set softtabstop=2
 " indent
 set shiftwidth=2
 
+" convert tab to space
+set expandtab
+
 " split windows
 map <C-\> <C-W>v
 map <C-_> <C-W>s
@@ -47,13 +76,6 @@ map <C-H> <C-W>h
 " easier moving between tabs
 "map <Leader>n <esc>:tabprevious<CR>
 "map <Leader>m <esc>:tabnext<CR>
-
-" convert tab to space
-set expandtab
-
-" Color scheme (not working?)
-"set t_Co=256
-"color wombat256mod
 
 " map Fix indentation to F7
 "map <F7> mzgg=G`z<CR>
@@ -83,11 +105,14 @@ nnoremap j gj
 nnoremap k gk
 
 " Indent guides
-colorscheme wombat256
 hi IndentGuidesOdd  ctermbg=black
 hi IndentGuidesEven ctermbg=darkgrey
 let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
+
+" enable 256 colors
+set t_Co=256
+colorscheme inkpot
 
 " syntastic
 set statusline+=%#warningmsg#
@@ -102,11 +127,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_aggregate_errors = 0
 
-" jedi-vim
-let g:jedi#show_call_signatures = 2
-
-" set up vim-pathogen
-" https://github.com/tpope/vim-pathogen
-execute pathogen#infect()
-syntax on
-filetype plugin indent on
+" vim-airline
+let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
+set noshowmode
