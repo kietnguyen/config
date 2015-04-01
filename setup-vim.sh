@@ -18,7 +18,7 @@ echo "PATH=$PATH:~/.local/bin" >> ~/.bashrc && source ~/.bashrc
 cp .vimrc ~/.
 
 # setup folders
-mkdir -p ~/.vim/{bundle,colors}
+mkdir -p ~/.vim/bundle
 cd ~/.vim && git init
 
 # clone Vundle

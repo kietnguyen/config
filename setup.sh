@@ -6,6 +6,8 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# update software sources
+sudo apt-get update
 
 # setup vim
 ./setup-vim.sh
