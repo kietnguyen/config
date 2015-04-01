@@ -1,5 +1,7 @@
 #!/bin/bash
 
+GH_CONFIG_PATH=`pwd`
+
 # install git and init
 #sudo apt-get install -y git
 
@@ -14,8 +16,8 @@ echo "PATH=$PATH:~/.local/bin" >> ~/.bashrc && source ~/.bashrc
 #git rm -f a_submodule
 #git rm --cached a_submodule
 
-# copy .vimrc
-cp .vimrc ~/.
+# copy .vimrc for Vundle
+cp $GH_CONFIG_PATH/.vimrc-vundle ~/.vimrc
 
 # setup folders
 mkdir -p ~/.vim/bundle
@@ -30,3 +32,6 @@ vim +PluginInstall +qall
 # compile YouCompleteMe
 sudo apt-get install -y build-essential cmake python-dev
 cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer
+
+# copy .vimrc
+cp $GH_CONFIG_PATH/.vimrc ~/.vimrc
