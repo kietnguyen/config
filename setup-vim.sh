@@ -1,6 +1,12 @@
 #!/bin/bash
 
 GH_CONFIG_PATH=`pwd`
+REQUIRED_MEM=`cat /proc/meminfo | awk 'NR==3||NR==16' | awk '{sum+=$2;} END {print sum}'`
+
+if [ "$REQUIRED_MEM" -lt 875 ]; then
+  echo "Might not have enough memory to compile YouCompleteMe"
+  exit 1
+fi
 
 # install git and init
 #sudo apt-get install -y git
@@ -20,8 +26,9 @@ echo "PATH=$PATH:~/.local/bin" >> ~/.bashrc && source ~/.bashrc
 cp $GH_CONFIG_PATH/.vimrc-vundle ~/.vimrc
 
 # setup folders
-mkdir -p ~/.vim/bundle
-cd ~/.vim && git init
+mkdir -p ~/.vim/{bundle,backup,swap,undo}
+cd ~/.vim && git init && \
+  printf "backup/\nswap/\nundo/\n" >> .gitignore
 
 # clone Vundle
 git submodule add https://github.com/gmarik/Vundle.vim bundle/Vundle.vim
