@@ -16,3 +16,6 @@ sudo apt-get update && sudo apt-get upgrade -y
 # setup tmux
 cp .tmux.conf ~/.
 
+
+# setup i3
+#sudo apt-get install -y i3 && cp -r .i3 ~/.
