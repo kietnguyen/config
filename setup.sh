@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Make sure only root can run this script
 #if [[ $EUID -ne 0 ]]; then
@@ -7,14 +7,16 @@
 #fi
 
 # update software sources
-sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get update
+#sudo apt-get upgrade -y
+
 
 # setup vim
 ./setup-vim.sh
 
 
 # setup tmux
-cp .tmux.conf ~/.
+sudo apt-get install -y tmux xclip && cp .tmux.conf ~/.
 
 
 # setup i3

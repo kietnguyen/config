@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 GH_CONFIG_PATH=`pwd`
 REQUIRED_MEM=`cat /proc/meminfo | awk 'NR==3||NR==16' | awk '{sum+=$2;} END {print sum}'`
@@ -23,7 +23,7 @@ echo "PATH=$PATH:~/.local/bin" >> ~/.bashrc && source ~/.bashrc
 #git rm --cached a_submodule
 
 # copy .vimrc for Vundle
-cp $GH_CONFIG_PATH/.vimrc-vundle ~/.vimrc
+sed -n '1,/End of Vundle/p' $GH_CONFIG_PATH/.vimrc > ~/.vimrc
 
 # setup folders
 mkdir -p ~/.vim/{bundle,backup,swap,undo}
