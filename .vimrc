@@ -1,3 +1,4 @@
+" Vundle
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -24,25 +25,51 @@ Plugin 'flazz/vim-colorschemes'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+""" End of Vundle config
+
+" Run a command after any file is saved
+"autocmd BufWritePost * !<command> <file>
+
 " Automatically reload .vimrc file
+" http://vim.wikia.com/wiki/Change_vimrc_with_auto_reload
 autocmd! bufwritepost .vimrc source %
 
 " Automatically remove all trailing whitespace
 " http://vim.wikia.com/wiki/Remove_unwanted_spaces
 autocmd BufWritePre * :%s/\s\+$//e
 
+" Rebind <Leander> key (default = \)
+let mapleader=","
+
+
+" Swap, backup, undo directories
+set directory=~/.vim/swap//
+
+set backupdir=~/.vim/backup//
+" Double slash does not actually work for backupdir, here's a fix
+au BufWritePre * let &backupext='@'.substitute(substitute(substitute(expand('%:p:h'), '/', '%', 'g'), '\', '%', 'g'), ':', '', 'g')
+set backup
+
+set undodir=~/.vim/undo//
+set undofile
+
+
 " line number
 set nu
 
-" smart indent
-set smartindent
+" column-80 vertical line
+set colorcolumn=80
+
+set ignorecase
+" case-sensitive search when using a capital letter
+set smartcase
 
 " highlight search matches
 set hlsearch
 " Remove highlight from last search
-"noremap <C-b> :nohl<CR>
-"vnoremap <C-b> :nohl<CR>
-"inoremap <C-b> :nohl<CR>
+noremap <Leader>l :nohl<CR>
+vnoremap <Leader>l :nohl<CR>
+inoremap <Leader>l :nohl<CR>
 
 " Toggle auto-indenting for code paste
 " http://vim.wikia.com/wiki/Toggle_auto-indenting_for_code_paste
@@ -83,12 +110,9 @@ map <C-H> <C-W>h
 " map ESCAPE to a quick 'jk'
 imap jk <ESC>
 
-" Rebind <Leander> key (default = \)
-let mapleader=","
-
 " Quicksave
 noremap <Leader>w :w<CR>
-noremap <Leader>q :q!<CR>
+noremap <Leader>z :q!<CR>
 
 " Easier indent/unindent code blocks
 vnoremap < <gv
@@ -112,7 +136,7 @@ let g:indent_guides_guide_size=1
 
 " enable 256 colors
 set t_Co=256
-colorscheme inkpot
+colorscheme wombat256i
 
 " syntastic
 set statusline+=%#warningmsg#
@@ -121,13 +145,23 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_python_python_exec = '/usr/bin/python3'
-let g:syntastic_aggregate_errors = 0
+let g:syntastic_python_pylint_args = '--disable=C0325'
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_loc_list_height = 8
+
+nnoremap <F3> :SyntasticToggleMode<CR>
+nnoremap <F4> :SyntasticCheck<CR>
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
 set laststatus=2
 set noshowmode
+
+
+" YouCompleteMe
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
