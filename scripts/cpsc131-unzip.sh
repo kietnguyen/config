@@ -23,22 +23,22 @@ for ZIP_FILE in zip-temp/*; do
   mkdir -p "$NAME"
 
   FILE_EXT="${ZIP_FILE##*.}"
-  shopt -s nocasematch
   if [ "$FILE_EXT" != "zip" ]; then
-    echo "####################" &>> $LOG_FILE
+    echo "########################################" &>> $LOG_FILE
     echo "$ZIP_FILE" &>> $LOG_FILE
-    echo "####################" &>> $LOG_FILE
+    echo "########################################" &>> $LOG_FILE
     continue;
-
-    echo "Extracting... $ZIP_FILE" &>> $LOG_FILE
-    rm -rf file-temp && mkdir file-temp
-    unzip "$ZIP_FILE" -d file-temp &>> $LOG_FILE
-
-    echo "Moving files..." &>> $LOG_FILE
-    for FILE in $(find file-temp -regextype posix-egrep -iregex '[^\W]*\.(h|cpp|py|txt|pdf|doc|docx|odt|jpg|png)$'); do
-      mv -v "$FILE" "$NAME" &>> $LOG_FILE
-    done
   fi
+
+  echo "Extracting... $ZIP_FILE" &>> $LOG_FILE
+  rm -rf file-temp && mkdir file-temp
+  unzip "$ZIP_FILE" -d file-temp &>> $LOG_FILE
+
+  echo "Moving files..." &>> $LOG_FILE
+  shopt -s nocasematch
+  for FILE in $(find file-temp -regextype posix-egrep -iregex '^\w\S*\.(h|cpp|py|txt|pdf|doc|docx|odt|jpg|png)$'); do
+    mv -v "$FILE" "$NAME" &>> $LOG_FILE
+  done
   shopt -u nocasematch
 
 done
