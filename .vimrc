@@ -112,7 +112,7 @@ imap jk <ESC>
 
 " Quicksave
 noremap <Leader>w :w<CR>
-noremap <Leader>z :q!<CR>
+noremap <Leader>z :q<CR>
 
 " Easier indent/unindent code blocks
 vnoremap < <gv
@@ -127,6 +127,9 @@ set nofoldenable
 " Wrapped lines goes down/up to next row, rather than next line in file.
 nnoremap j gj
 nnoremap k gk
+
+" maximum of tabs
+set tabpagemax=32
 
 " Indent guides
 hi IndentGuidesOdd  ctermbg=black
@@ -149,7 +152,8 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_python_python_exec = '/usr/bin/python3'
-let g:syntastic_python_pylint_args = '--disable=C0325'
+let g:syntastic_python_checkers = ['pylint']
+"let g:syntastic_python_pylint_args = '--disable=C0325'
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_loc_list_height = 8
 
