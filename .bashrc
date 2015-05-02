@@ -129,3 +129,6 @@ alias tmux='tmux -2'
 
 # python3 by default
 alias python=python3 pdb=pdb3
+
+# vim open tab by default
+alias vim='vim -p'
