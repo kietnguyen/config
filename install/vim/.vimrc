@@ -9,7 +9,7 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " plugins
 Plugin 'Valloric/YouCompleteMe'
@@ -20,6 +20,12 @@ Plugin 'tpope/vim-surround'
 Plugin 'bling/vim-airline'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'flazz/vim-colorschemes'
+
+" js
+Plugin 'marijnh/tern_for_vim'
+
+" html/xml
+Plugin 'docunext/closetag.vim'
 
 " markdown
 Plugin 'godlygeek/tabular'
@@ -219,6 +225,13 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': '',
   \ }
+
+
+
+" closetag.vim
+" ============
+autocmd FileType html,htmldjango,jinjahtml,eruby,mako let b:closetag_html_style=1
+autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
 
 
 

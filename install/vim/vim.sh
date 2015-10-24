@@ -9,37 +9,44 @@ if [ "$REQUIRED_MEM" -lt 875 ]; then
 fi
 
 # install vim and git
-sudo apt-get install -y                                 \
-                vim                                     \
-                vim-gnome `# add vim clipboard support` \
-                git
-
-# install pip
-#wget -O - --no-check-certificate https://bootstrap.pypa.io/get-pip.py | python - --user
-# setup local bin for pip
-#echo "PATH=$PATH:~/.local/bin" >> ~/.bashrc && source ~/.bashrc
-
-# remove a submodule by
-#git submodule deinit -f a_submodule
-#git rm -f a_submodule
-#git rm --cached a_submodule
+sudo apt-get install -y vim \
+                        vim-gnome `# add vim clipboard support` \
+                        git
 
 # copy .vimrc for Vundle
-sed -n '1,/End of Vundle/p' $SRC_DIR/.vimrc > ~/.vimrc
+sed -n '1,/End of Vundle/p' $SRC_DIR/.vimrc > $HOME/.vimrc
 
 # setup folders
-mkdir -p ~/.vim/{bundle,backup,swap,undo}
-#cd ~/.vim && git init && printf "backup/\nswap/\nundo/\n" >> .gitignore
+mkdir -p $HOME/.vim/{bundle,backup,swap,undo}
 
-# clone Vundle
-git submodule add https://github.com/gmarik/Vundle.vim bundle/Vundle.vim
-
+# Vundle
+# ======
+# install Vundle
+git clone https://github.com/gmarik/Vundle.vim $HOME/.vim/bundle/Vundle.vim
 # install Vundle plugins
 vim +PluginInstall +qall
 
-# compile YouCompleteMe
-sudo apt-get install -y build-essential cmake python-dev
-cd ~/.vim/bundle/YouCompleteMe && ./install.sh --clang-completer
 
-# soft-link .vimrc
-rm ~/.vimrc && ln -s $SRC_DIR/.vimrc ~/
+# YouCompleteMe
+# =============
+# install prerequisites
+sudo apt-get install -y build-essential cmake python-dev
+# compile and install YouCompleteMe
+(cd $HOME/.vim/bundle/YouCompleteMe && ./install.py)
+
+
+# term_for_vim
+# ============
+# install nvm
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+# reload nvm
+. $HOME/.nvm/nvm.sh
+# install npm and node.js
+nvm install stable 2> /dev/null
+nvm alias default stable
+# install tern
+(cd $HOME/.vim/bundle/tern_for_vim && npm install)
+
+
+# symbolic link .vimrc
+rm $HOME/.vimrc && ln -s $SRC_DIR/.vimrc $HOME
