@@ -30,7 +30,6 @@ Plugin 'docunext/closetag.vim'
 " markdown
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
-Plugin 'suan/vim-instant-markdown'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -101,6 +100,7 @@ set hlsearch                        " highlight search matches
 
 " toggle auto-indenting for code paste
 " http://vim.wikia.com/wiki/Toggle_auto-indenting_for_code_paste
+" <F2>: toggle auto indenting for code paste
 nnoremap <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 
@@ -177,7 +177,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_python_python_exec = '/usr/bin/python3'
-let g:syntastic_python_checkers = ['pep8']
+"let g:syntastic_python_checkers = ['pep8']
 "let g:syntastic_python_pylint_args = '--disable=C0325'
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_loc_list_height = 8
@@ -255,8 +255,6 @@ map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 map <C-H> <C-W>h
-
-" <F2>: toggle auto indenting for code paste
 
 " toggle syntastic mode
 nnoremap <F3> :SyntasticToggleMode<CR>
