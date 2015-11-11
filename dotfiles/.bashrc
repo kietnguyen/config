@@ -83,6 +83,8 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -112,14 +114,12 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
 ### End of Ubuntu default ###
 
 
 # save more history and to ~/.history
 HISTSIZE=1000000
 HISTFILESIZE=1000000
-HISTFILE=~/.history
 
 # PS1
 export PS1='\W$ '
@@ -128,7 +128,46 @@ export PS1='\W$ '
 alias tmux='tmux -2'
 
 # python3 by default
-alias python=python3 pdb=pdb3
+#alias python=python3 pdb=pdb3
+export PATH=$HOME/.local/bin:$PATH
 
-# vim open tab by default
-alias vim='vim -p'
+# vi as vim by default
+alias vi='vim'
+
+# packer
+export PATH=$HOME/Software/packer:$PATH
+
+# Add RVM to PATH for scripting
+export PATH=$HOME/.rvm/bin:$PATH
+if which ruby >/dev/null && which gem >/dev/null; then
+  export PATH=$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin
+fi
+
+# Add NVM to PATH for scripting
+export NVM_DIR=$HOME/.nvm
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+# android sdk
+export ANDROID_HOME=$HOME/Software/android/sdk
+export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
+
+# less color for man pages
+# https://wiki.archlinux.org/index.php/Man_page
+man() {
+  env \
+    LESS_TERMCAP_mb=$'\E[01;31m'                            \
+                        `# begin blinking`                  \
+    LESS_TERMCAP_md=$'\E[01;38;5;74m'                       \
+                        `# begin bold`                      \
+    LESS_TERMCAP_me=$'\E[0m'                                \
+                        `# end mode`                        \
+    LESS_TERMCAP_se=$'\E[0m'                                \
+                        `# end standout-mode`               \
+    LESS_TERMCAP_so=$'\E[38;5;016m\E[48;5;220m'             \
+                        `# begin standout-mode - info box`  \
+    LESS_TERMCAP_ue=$'\E[0m'                                \
+                        `# end underline`                   \
+    LESS_TERMCAP_us=$'\E[04;38;5;146m'                      \
+                        `# begin underline`                 \
+  man "$@"
+}
