@@ -16,8 +16,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-#HISTSIZE=1000
-#HISTFILESIZE=2000
+HISTSIZE=1000
+HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -37,7 +37,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -76,13 +76,14 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
+
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -117,39 +118,9 @@ fi
 ### End of Ubuntu default ###
 
 
-# save more history and to ~/.history
-HISTSIZE=1000000
-HISTFILESIZE=1000000
-
-# PS1
-export PS1='\W$ '
-
-# 256-color tmux
-alias tmux='tmux -2'
-
-# python3 by default
-#alias python=python3 pdb=pdb3
-export PATH=$HOME/.local/bin:$PATH
-
-# vi as vim by default
-alias vi='vim'
-
-# packer
-export PATH=$HOME/Software/packer:$PATH
-
-# Add RVM to PATH for scripting
-export PATH=$HOME/.rvm/bin:$PATH
-if which ruby >/dev/null && which gem >/dev/null; then
-  export PATH=$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin
-fi
-
-# Add NVM to PATH for scripting
-export NVM_DIR=$HOME/.nvm
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-# android sdk
-export ANDROID_HOME=$HOME/Software/android/sdk
-export PATH=$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH
+# save more history
+HISTSIZE=999999
+HISTFILESIZE=9999999
 
 # less color for man pages
 # https://wiki.archlinux.org/index.php/Man_page
@@ -171,3 +142,33 @@ man() {
                         `# begin underline`                 \
   man "$@"
 }
+
+# pip (locally)
+export PATH=$HOME/.local/bin:$PATH
+
+# packer
+export PATH=$HOME/packer:$PATH
+
+export NVM_DIR="/home/knguyen/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# fix autocomplete in python interactive shell
+export PYTHONSTARTUP="$HOME/.pythonstartup.py"
+
+
+# colors!
+green="\[\033[0;32m\]"
+blue="\[\033[0;34m\]"
+purple="\[\033[0;35m\]"
+reset="\[\033[0m\]"
+
+# Change command prompt
+source $HOME/git-prompt.sh
+export GIT_PS1_SHOWDIRTYSTATE=1
+# '\u' adds the name of the current user to the prompt
+# '\$(__git_ps1)' adds git-related stuff
+# '\W' adds the name of the current directory
+export PS1="$green\$(__git_ps1)$blue\W$ $reset"
