@@ -38,15 +38,15 @@ sudo apt-get install -y build-essential cmake python-dev
 # term_for_vim
 # ============
 # install nvm
-wget -qO- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+#wget -qO- https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 # reload nvm
-. $HOME/.nvm/nvm.sh
+#. $HOME/.nvm/nvm.sh
 # install npm and node.js
-nvm install stable 2> /dev/null
-nvm alias default stable
+#nvm install stable 2> /dev/null
+#nvm alias default stable
 # install tern
-(cd $HOME/.vim/bundle/tern_for_vim && npm install)
+#(cd $HOME/.vim/bundle/tern_for_vim && npm install)
 
 
 # symbolic link .vimrc
-rm $HOME/.vimrc && ln -s $SRC_DIR/.vimrc $HOME
+#rm $HOME/.vimrc && ln -s $SRC_DIR/.vimrc $HOME

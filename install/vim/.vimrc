@@ -12,17 +12,27 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " plugins
+" =======
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'bling/vim-airline'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'Chiel92/vim-autoformat'
+
+" nerdtree
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 " js
-Plugin 'marijnh/tern_for_vim'
+Plugin 'jelera/vim-javascript-syntax'
+Plugin 'pangloss/vim-javascript'
+Plugin 'othree/javascript-libraries-syntax.vim'
+
+" jade
+Plugin 'digitaltoad/vim-jade'
 
 " html/xml
 Plugin 'docunext/closetag.vim'
@@ -63,7 +73,7 @@ set history=999                     " store more :cmdline history
 set ignorecase                      " case-INsensitive search
 set smartcase                       " case-sensitive search when using a capital letter
 
-set mouse=a                         " set mouse support for all modes
+"set mouse=a                         " set mouse support for all modes
 
 set splitright                      " open vertical split right of current window
 set splitbelow                      " open horizontal split below of current window
@@ -225,7 +235,7 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': '',
   \ }
-
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 
 
 " closetag.vim
@@ -235,17 +245,24 @@ autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bu
 
 
 
+" javascript-libraries-syntax.vim
+" ===============================
+let g:used_javascript_libs = 'underscore,angularjs,angularui,angularuirouter,handlebars'
+
+
+
 " Shortcut keys
 " =============
 " remove highlight from last search
-noremap <Leader>n :nohl<CR>
-vnoremap <Leader>n :nohl<CR>
-inoremap <Leader>n :nohl<CR>
+noremap <Leader>l :nohl<CR>
+vnoremap <Leader>l :nohl<CR>
+inoremap <Leader>l :nohl<CR>
 
 " buffers
-nnoremap <Leader>b :bp<CR>
-nnoremap <Leader>f :bn<CR>
-nnoremap <Leader>q :bd<CR>
+nnoremap <Leader>p :bp<CR>
+nnoremap <Leader>n :bn<CR>
+nnoremap <Leader>q :bw<CR>
+nmap <Leader>bb :ls<CR>:buffer<Space>
 
 " split windows
 map <C-\> <C-W>v
@@ -256,14 +273,26 @@ map <C-K> <C-W>k
 map <C-L> <C-W>l
 map <C-H> <C-W>h
 
+" search and replace the all word(s) under the cursor in current buffer
+" http://vim.wikia.com/wiki/Search_and_replace_the_word_under_the_cursor
+noremap <Leader>r :%s/\<<C-r><C-w>\>//gc<Left><Left><Left>
+
+" search and replace selected text
+" http://stackoverflow.com/questions/676600/vim-search-and-replace-selected-text
+vnoremap <Leader>r "hy:%s/<C-r>h//gc<left><left><left>
+
 " toggle syntastic mode
 nnoremap <F3> :SyntasticToggleMode<CR>
 
 " activate syntastic check
 nnoremap <F4> :SyntasticCheck<CR>
 
+" toggle spell check
+map <F5> :setlocal spell! spelllang=en_us<CR>
+
 " fix indentation
-map <F7> mzgg=G`z<CR>
+"map <F7> mzgg=G`z<CR>
+map <F7> :Autoformat<CR>
 
 " quicksave
 noremap <Leader>w :w<CR>
