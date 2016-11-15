@@ -16,23 +16,47 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/syntastic'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'tpope/vim-surround'
-Plugin 'bling/vim-airline'
-Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'tpope/vim-repeat'
+"Plugin 'tpope/vim-surround'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'Chiel92/vim-autoformat'
+Plugin 'gioele/vim-autoswap'
+
+" indent guides
+"Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'Yggdroot/indentLine'
+
+" airline
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 " nerdtree
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 " js
+"Plugin 'ternjs/tern_for_vim'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'othree/javascript-libraries-syntax.vim'
 
+Plugin 'Raimondi/delimitMate'
+
+" snipmate
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+" (optional)
+Plugin 'honza/vim-snippets'
+
+" css
+Plugin 'skammer/vim-css-color'
+
 " jade
-Plugin 'digitaltoad/vim-jade'
+Plugin 'digitaltoad/vim-pug'
+
+" ejs
+Plugin 'briancollins/vim-jst'
 
 " html/xml
 Plugin 'docunext/closetag.vim'
@@ -40,6 +64,27 @@ Plugin 'docunext/closetag.vim'
 " markdown
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+
+" emmet
+Plugin 'mattn/emmet-vim'
+Plugin 'mattn/webapi-vim'
+
+" proselint
+"Plugin 'amperser/proselint'
+
+" typescript
+Plugin 'leafgarland/typescript-vim'
+Plugin 'Quramy/tsuquyomi'
+
+" tmux
+Plugin 'wellle/tmux-complete.vim'
+Plugin 'jmcantrell/vim-virtualenv'
+
+" PowerShell
+Plugin 'PProvost/vim-ps1'
+
+" json
+Plugin 'elzr/vim-json'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -56,7 +101,16 @@ autocmd! bufwritepost .vimrc source %
 
 " Automatically remove all trailing whitespace
 " http://vim.wikia.com/wiki/Remove_unwanted_spaces
-autocmd BufWritePre * :%s/\s\+$//e
+fun! StripTrailingWhitespace()
+  " Only strip if the b:noStripeWhitespace variable isn't set
+  if exists('b:noStripWhitespace')
+      return
+  endif
+  %s/\s\+$//e
+endfun
+
+autocmd BufWritePre * call StripTrailingWhitespace()
+autocmd FileType markdown let b:noStripWhitespace=1
 
 
 
@@ -127,6 +181,7 @@ set softtabstop=2                     " soft tabstop
 set shiftwidth=2                      " indent
 set expandtab                         " convert tab to space
 
+autocmd FileType python set tabstop=4|set softtabstop=4|set shiftwidth=4
 
 
 " Display
@@ -153,9 +208,10 @@ let g:rehash256 = 1
 
 " Folding
 " =======
-set nofoldenable                    " disable folding
-"set foldmethod=indent              " fold based on indent
-"set foldnestmax=3                  " deepest fold is 3 levels
+set foldmethod=indent                 " fold based on indent
+set foldnestmax=10                    " deepest fold is 10 levels
+set nofoldenable                      " don't fold by default
+set foldlevel=1
 
 
 
@@ -168,11 +224,17 @@ set tabpagemax=32
 
 " vim-indent-guides
 " =================
-hi IndentGuidesOdd  ctermbg=black
-hi IndentGuidesEven ctermbg=darkgrey
-let g:indent_guides_start_level=2
-let g:indent_guides_guide_size=1
+"let g:indent_guides_auto_colors=0
+"hi IndentGuidesOdd ctermbg=238
+"hi IndentGuidesEven ctermbg=236
+"let g:indent_guides_start_level=2
+"let g:indent_guides_guide_size=1
 
+
+
+" indentLine
+let g:vim_json_syntax_conceal = 0
+let g:indentLine_noConcealCursor = ''
 
 
 " syntastic
@@ -183,31 +245,68 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height = 5
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_aggregate_errors = 1
+
+let g:syntastic_error_symbol = '❌'
+let g:syntastic_style_error_symbol = '⁉️'
+let g:syntastic_warning_symbol = '⚠️'
+let g:syntastic_style_warning_symbol = '💩'
+
+highlight link SyntasticErrorSign SignColumn
+highlight link SyntasticWarningSign SignColumn
+highlight link SyntasticStyleErrorSign SignColumn
+highlight link SyntasticStyleWarningSign SignColumn
 
 let g:syntastic_python_python_exec = '/usr/bin/python3'
-"let g:syntastic_python_checkers = ['pep8']
-"let g:syntastic_python_pylint_args = '--disable=C0325'
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_loc_list_height = 8
+let g:syntastic_python_checkers = ['python', 'pylint']
+let g:syntastic_javascript_checkers = ['eslint']
+"let g:syntastic_html_checkers = ['eslint']
+
+" disable syntastic by default
+autocmd VimEnter * SyntasticToggleMode
 
 
 
 " vim-airline
 " ===========
+function! AirlineInit()
+  let g:airline_section_a = airline#section#create(['mode',' ','branch'])
+  let g:airline_section_b = airline#section#create_left(['ffenc','hunks','%f'])
+  let g:airline_section_c = airline#section#create(['filetype'])
+  let g:airline_section_x = airline#section#create(['%P'])
+  let g:airline_section_y = airline#section#create(['%B'])
+  let g:airline_section_z = airline#section#create_right(['%l','%c'])
+endfunction
+autocmd VimEnter * call AirlineInit()
+
 " enable the list of buffers
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
 " show only filename
 let g:airline#extensions#tabline#fnamemod = ':t'
-let g:airline_powerline_font=0
+let g:airline_powerline_fonts=1
 
 
 
 " YouCompleteMe
 " =============
 let g:ycm_add_preview_to_completeopt = 1
+"let g:ycm_confirm_extra_conf = 0
+"set completeopt-=preview
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_python_binary_path = 'python3'
+
+
+
+" vim-markdown
+" ============
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
 
 
 
@@ -222,20 +321,21 @@ let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 
 " open a NERDTree automatically when vim starts up & no files were specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 
 
 " ctrlp
 " =====
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/bower_components/*
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'dir':  '\v[\/](node_modules|bower_components|\.(git|hg|svn))$',
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': '',
   \ }
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
 
 
 " closetag.vim
@@ -245,9 +345,54 @@ autocmd FileType html,xhtml,xml,htmldjango,jinjahtml,eruby,mako source ~/.vim/bu
 
 
 
+" autoformat
+let g:formatdef_custom_html = '"js-beautify --type html --indent-size=2 --preserve-newlines --wrap-line-length=80 --wrap-attributes=force --wrap-attributes-indent-size=4"'
+let g:formatters_html = ['custom_html']
+
+
+
 " javascript-libraries-syntax.vim
 " ===============================
-let g:used_javascript_libs = 'underscore,angularjs,angularui,angularuirouter,handlebars'
+let g:used_javascript_libs = 'underscore,angularjs,jasmine'
+
+
+
+" delimitMate
+" ===========
+let delimitMate_expand_cr = 1
+
+
+
+" tern-for-vim
+"let g:tern_show_argument_hints='onhold'
+"let g:tern_map_keys=1
+
+
+
+" tmux-complete.vim
+" =================
+let g:tmuxcomplete#trigger = 'omnifunc'
+
+
+
+" emmet.vim
+" =========
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+
+let g:user_emmet_leader_key='<C-l>'
+let g:user_emmet_settings = webapi#json#decode(
+  \ join(readfile(expand('~/.snippets.json')), "\n"))
+" https://coderwall.com/p/_uhrxw/using-tab-key-as-abbreviation-expander-on-emmet-vim
+" use <tab> as abbreviation expander
+"let g:user_emmet_expandabbr_key='<tab>'
+"imap <buffer> <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+
+
+
+" Filetypes
+" =========
+"au BufNewFile,BufRead *.ejs set filetype=html
 
 
 
@@ -266,7 +411,7 @@ nmap <Leader>bb :ls<CR>:buffer<Space>
 
 " split windows
 map <C-\> <C-W>v
-map <C-_> <C-W>s
+map <C--> <C-W>s
 " move around the windows
 map <C-J> <C-W>j
 map <C-K> <C-W>k
