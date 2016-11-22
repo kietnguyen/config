@@ -86,6 +86,16 @@ Plugin 'PProvost/vim-ps1'
 " json
 Plugin 'elzr/vim-json'
 
+" rails
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-bundler'
+
+" comment
+Plugin 'tomtom/tcomment_vim'
+
+" ack
+Plugin 'mileszs/ack.vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -262,8 +272,14 @@ highlight link SyntasticStyleWarningSign SignColumn
 
 let g:syntastic_python_python_exec = '/usr/bin/python3'
 let g:syntastic_python_checkers = ['python', 'pylint']
+
 let g:syntastic_javascript_checkers = ['eslint']
+
 "let g:syntastic_html_checkers = ['eslint']
+let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+
+let g:syntastic_eruby_ruby_quiet_messages =
+    \ {"regex": "possibly useless use of a variable in void context"}
 
 " disable syntastic by default
 autocmd VimEnter * SyntasticToggleMode
@@ -377,8 +393,8 @@ let g:tmuxcomplete#trigger = 'omnifunc'
 
 " emmet.vim
 " =========
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
+"let g:user_emmet_install_global = 0
+"autocmd FileType html,css EmmetInstall
 
 let g:user_emmet_leader_key='<C-l>'
 let g:user_emmet_settings = webapi#json#decode(
@@ -433,7 +449,7 @@ nnoremap <F3> :SyntasticToggleMode<CR>
 nnoremap <F4> :SyntasticCheck<CR>
 
 " toggle spell check
-map <F5> :setlocal spell! spelllang=en_us<CR>
+map <F6> :setlocal spell! spelllang=en_us<CR>
 
 " fix indentation
 "map <F7> mzgg=G`z<CR>
@@ -453,3 +469,27 @@ vnoremap <Leader>s :sort<CR>
 " Wrapped lines goes down/up to next row, rather than next line in file.
 nnoremap j gj
 nnoremap k gk
+
+" Use The Silver Searcher
+"   https://github.com/ggreer/the_silver_searcher
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag -Q -l --nocolor --hidden -g "" %s'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+
+  if !exists(":Ag")
+    command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+    nnoremap \ :Ag<SPACE>
+  endif
+endif
+
+" Autocomplete with dictionary words when spell check is on
+set complete+=kspell
+
+" Always use vertical diffs
+set diffopt+=vertical

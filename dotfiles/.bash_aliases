@@ -83,3 +83,5 @@ function quiz-tokens {
 # update Papirus Icon Theme
 # https://github.com/PapirusDevelopmentTeam/papirus-icon-theme-gtk/commit/396a16fc85c128c4903e16e42a6ebb550f72833d
 alias update-papirus='wget -O - https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme-gtk/master/install.sh | bash'
+
+alias ag='ag --path-to-ignore $HOME/.agignore'
